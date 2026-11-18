@@ -1,0 +1,11 @@
+PASS Angular pide /api/auth/me con la COOKIE (sin Bearer)
+PASS Con la sesión confirmada, pide su JWT a /api/auth/token (cookie, sin Bearer)
+PASS Las peticiones de datos (dashboard) salen con 'Authorization: Bearer ...'
+PASS El token es de 'admin', ROLE_ADMIN y dura lo mismo que la sesión (60 s)
+PASS Con cookie válida pero Bearer falso -> 401 TOKEN_INVALIDO (manda el token)
+PASS Tras >30 s Angular renueva el token ANTES de que venza (nuevo GET /api/auth/token con cookie)
+PASS ...y las peticiones siguientes usan el token NUEVO
+PASS La pantalla sigue funcionando sin pedir login (Deportistas cargó)
+PASS Cerrar sesión lleva al login
+
+RESULTADO ANGULAR+JWT: 9/9 pruebas OK

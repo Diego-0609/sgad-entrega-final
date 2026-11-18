@@ -1,0 +1,70 @@
+── A. Obtener el JWT ──
+PASS Clave incorrecta -> 401 CREDENCIALES_INVALIDAS
+PASS Usuario inexistente da la MISMA respuesta (no revela qué usuarios existen)
+PASS Campos vacíos -> 400
+PASS admin/admin123 -> 200 con accessToken Bearer
+PASS El login por token NO crea sesión ni cookie
+PASS El token tiene 3 partes y su contenido trae usuario, rol y vencimiento
+PASS El token NO contiene la contraseña
+── B. Usar el JWT en la API ──
+PASS Sin token ni cookie -> 401 NO_AUTENTICADO
+PASS GET con Bearer -> 200
+PASS ...y sin crear sesión (stateless: no hay Set-Cookie)
+PASS /api/auth/me con JWT -> metodo JWT, usuario y rol
+PASS ADMIN crea escuela con JWT (CRUD) -> 201
+PASS ADMIN edita escuela con JWT
+PASS Las validaciones del backend también aplican con JWT -> 400
+PASS ADMIN borra escuela con JWT
+PASS DEPORTISTA con JWT puede LEER escuelas
+PASS DEPORTISTA con JWT NO puede crear escuelas -> 403 ACCESO_DENEGADO
+PASS DEPORTISTA con JWT NO ve materiales -> 403
+PASS ENTRENADOR con JWT SÍ ve materiales
+PASS ENTRENADOR con JWT NO puede crear escuelas -> 403
+── B2. Tokens inválidos ──
+PASS Token basura -> 401 TOKEN_INVALIDO
+PASS Token con el contenido alterado (firma no coincide) -> TOKEN_INVALIDO
+PASS Token firmado con OTRA clave -> TOKEN_INVALIDO
+PASS Token sin firma (alg=none) -> TOKEN_INVALIDO
+PASS Token bien firmado pero VENCIDO -> 401 TOKEN_EXPIRADO
+PASS Token válido de un usuario que NO existe -> TOKEN_INVALIDO
+PASS Token de otro emisor -> TOKEN_INVALIDO
+PASS Token sin vencimiento (exp) -> TOKEN_INVALIDO
+PASS Otro esquema (Basic) no se acepta -> 401
+── B3. Cambios en la base de datos ──
+PASS Usuario recién registrado obtiene su JWT
+PASS ...y como DEPORTISTA no puede crear escuelas
+PASS Si un admin le sube el rol en la BD, el MISMO token ya lo refleja (el rol vigente es el de la BD)
+PASS Usuario deshabilitado: su token aunque no haya vencido se rechaza
+PASS ...y tampoco puede pedir un token nuevo
+── Convivencia: cookie + JWT ──
+PASS Login con formulario sigue funcionando (cookie JSESSIONID)
+PASS Con la cookie, /me dice metodo SESION
+PASS El token entregado a una sesión dura lo mismo que la sesión (expiresIn = 60 s en esta prueba)
+PASS ...y su 'exp' en el contenido coincide
+PASS Quien ya tiene sesión puede cambiarla por un JWT (GET /api/auth/token)
+PASS ...y ese JWT funciona SIN cookie
+PASS GET /api/auth/token sin sesión -> 401
+PASS Un JWT NO sirve para pedir otro JWT (no se renueva solo) -> 403
+PASS ...ni mandando el login con un Bearer puesto -> 403
+PASS Si la petición trae cookie Y token, manda el token (metodo JWT, usuario deportista)
+PASS Un Bearer en una página del backend (no /api) no abre nada -> redirige a /login
+PASS Al cerrar sesión la cookie muere...
+PASS ...pero el JWT sigue vivo hasta su vencimiento (así funciona JWT)
+── CORS (Angular en :4200 enviando Authorization) ──
+PASS Preflight con cabecera Authorization permitido
+PASS El 401 por token malo también lleva cabecera CORS (Angular lo puede leer)
+── C. Google / OAuth2 ──
+PASS Sin credenciales de Google NO aparece el botón (la app sigue funcionando)
+PASS ...y /oauth2/authorization/google no manda a Google
+PASS Con SGAD_GOOGLE_CLIENT_ID el login muestra 'Continuar con Google'
+PASS El botón redirige a accounts.google.com
+PASS ...con el client_id configurado
+PASS ...flujo de código (response_type=code)
+PASS ...pidiendo openid, profile y email
+PASS ...con redirect_uri de vuelta al SGAD
+PASS ...con state y nonce anti-falsificación
+PASS Un callback falso (state incorrecto) se rechaza -> /login?oauthError
+PASS ...y se muestra el aviso 'No se pudo iniciar sesión con Google'
+PASS El backend con Google también protege la API (401 sin credenciales)
+
+RESULTADO: 61/61 pruebas OK

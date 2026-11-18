@@ -1,0 +1,79 @@
+PASS API sin sesión -> 401 JSON NO_AUTENTICADO
+PASS 401 incluye cabecera CORS para Angular
+PASS Login con contraseña incorrecta -> /login?error
+PASS Login admin correcto -> redirige al frontend
+PASS /api/auth/me devuelve rol y duración de sesión
+PASS ADMIN crea escuela -> 201
+PASS ADMIN lista escuelas
+PASS ADMIN edita escuela
+PASS ADMIN crea entrenador
+PASS ADMIN crea deportista
+PASS ADMIN crea entrenamiento (fecha/hora)
+PASS ADMIN crea asistencia
+PASS ADMIN crea material (embebido)
+PASS ADMIN edita material
+PASS ADMIN edita asistencia
+PASS ADMIN edita deportista
+PASS Validación: escuela sin nombre -> 400 VALIDACION con detalle por campo
+PASS Tipo incorrecto (edad='abc') -> 400 JSON_INVALIDO, sin 500
+PASS Validación: edad 0 -> 400
+PASS Referencia a escuela inexistente -> 400 (antes 500)
+PASS Falta idEscuela -> 400 claro
+PASS Fecha mal formada -> 400 JSON_INVALIDO
+PASS Estado de asistencia inválido -> 400
+PASS PUT a id inexistente -> 404 NO_ENCONTRADO
+PASS DELETE a id inexistente -> 404
+PASS GET a id inexistente -> 404 JSON
+PASS JSON roto -> 400 (no 500)
+PASS GET a ruta de API inexistente -> 404 con el mismo formato JSON de error
+PASS POST a ruta de API no prevista -> bloqueada (403 JSON)
+PASS Errores no filtran detalles internos
+PASS DEPORTISTA puede leer escuelas
+PASS DEPORTISTA NO puede crear escuela -> 403
+PASS DEPORTISTA NO puede borrar escuela -> 403
+PASS DEPORTISTA NO puede crear entrenador -> 403
+PASS DEPORTISTA NO puede crear deportista -> 403
+PASS DEPORTISTA NO puede registrar asistencia -> 403
+PASS DEPORTISTA NO puede editar entrenamientos -> 403
+PASS DEPORTISTA NO puede ver materiales -> 403
+PASS La escuela sigue existiendo tras el intento de borrado del deportista
+PASS ENTRENADOR crea deportista -> 201
+PASS ENTRENADOR lee materiales
+PASS ENTRENADOR NO puede crear escuela
+PASS ENTRENADOR NO puede borrar entrenadores
+PASS ENTRENADOR borra deportista
+PASS DEPORTISTA en /admin/zona -> redirige a /403
+PASS ...y la página 403 se muestra
+PASS ENTRENADOR en /admin/zona -> /403
+PASS ENTRENADOR entra a /entrenador/zona
+PASS ADMIN entra a /admin/zona
+PASS /panel sin sesión (navegador) -> redirige a /login
+PASS /panel sin sesión (cliente sin Accept html) también -> /login
+PASS /publico es público
+PASS Registro: usuario muy corto rechazado
+PASS Registro: contraseña corta rechazada en el servidor
+PASS Registro: contraseñas distintas rechazadas
+PASS Registro: NO permite autoregistrarse como ADMIN
+PASS Registro: usuario válido -> /login?registrado
+PASS Registro: usuario duplicado rechazado
+PASS Registro: no se puede suplantar 'admin'
+PASS El usuario recién registrado puede iniciar sesión
+PASS ...y tiene rol DEPORTISTA
+PASS Logout por GET -> /login?logout
+PASS Tras el logout la API responde 401
+PASS Botón 'Cerrar sesión' del panel (POST /logout) funciona
+PASS Tras el logout POST la sesión murió
+PASS Página inexistente (navegador) muestra la 404 propia
+PASS Sesiones simultáneas: la sesión antigua queda cerrada (SESION_REEMPLAZADA)
+PASS ...y la nueva sigue activa
+
+-- Prueba de expiración: timeout configurado en 1 minuto --
+PASS t=40s: la sesión sigue viva
+PASS t=80s: sigue viva porque el timeout se RENUEVA con la actividad (40s de inactividad < 60s)
+PASS Tras >60s de inactividad -> 401 SESION_EXPIRADA (JSON)
+PASS ...con cabecera CORS para que Angular lo pueda leer
+PASS Web con sesión vencida -> /login?expired=true
+PASS ...y /login se muestra sin bucle de redirecciones, con el aviso de sesión expirada
+PASS Mensaje 'Tu sesión expiró por inactividad' visible
+
+RESULTADO: 75/75 pruebas OK

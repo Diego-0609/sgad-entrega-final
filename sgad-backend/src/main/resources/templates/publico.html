@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SGAD · Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">SGAD</span>
+        <a href="/login" class="btn btn-outline-light btn-sm">Iniciar sesión</a>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <h2 class="mb-4">Sistema de Gestión de Academia Deportiva</h2>
+    <p class="text-muted mb-4">Vista pública. Para ver y administrar la información completa, inicia sesión.</p>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h1 th:text="${totalEscuelas}">0</h1>
+                    <p class="text-muted mb-0">Escuelas registradas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h1 th:text="${totalEntrenadores}">0</h1>
+                    <p class="text-muted mb-0">Entrenadores</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h1 th:text="${totalDeportistas}">0</h1>
+                    <p class="text-muted mb-0">Deportistas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+PASS Sin sesión, Angular manda al login del backend y tras entrar vuelve al dashboard
+PASS Navbar muestra usuario y rol
+PASS Navbar muestra la cuenta regresiva de la sesión (mm:ss)
+PASS DEPORTISTA no ve Escuelas / Entrenadores / Materiales en el menú
+PASS El dashboard del DEPORTISTA no genera peticiones 403
+PASS DEPORTISTA ve Entrenamientos pero SIN botón 'Nuevo' ni columna Acciones
+PASS DEPORTISTA ve Asistencias SIN botón 'Registrar' ni Acciones
+PASS DEPORTISTA entrando por URL a /escuelas es devuelto al dashboard (guard)
+PASS ...y a /materiales también
+PASS ADMIN ve todos los módulos
+PASS ADMIN crea una escuela desde la interfaz (CRUD frontend + backend)
+PASS Error de validación del backend se muestra como aviso al usuario
+PASS ADMIN elimina la escuela desde la interfaz
+PASS Cerrar sesión lleva al login con el mensaje de sesión cerrada
+PASS Tras cerrar sesión, entrar a Angular vuelve a pedir login
+   cuenta regresiva inicial: ⏱ 01:00
+PASS ENTRENADOR ve Deportistas y Materiales, no Escuelas
+PASS La cuenta regresiva baja con el tiempo
+PASS Al llegar a 00:00 el usuario es enviado al login con aviso de sesión expirada
+
+RESULTADO FRONTEND: 18/18 pruebas OK

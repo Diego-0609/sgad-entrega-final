@@ -1,0 +1,14 @@
+
+
+── Agregado en la v2 (JWT + Google + Docker) ──
+  pruebas_jwt_google.py       -> 59/59 OK (token, roles, tokens falsos/vencidos, convivencia cookie+JWT, CORS, botón y redirección a Google)
+  resultado_jwt_google.txt    -> salida de esa prueba
+  Las pruebas anteriores (75 backend + 18 navegador) se repitieron con esta versión: siguen OK.
+  Para la parte C de pruebas_jwt_google.py se necesita una 2ª copia del backend en el puerto 8081:
+     SGAD_GOOGLE_CLIENT_ID=test-client-id.apps.googleusercontent.com SGAD_GOOGLE_CLIENT_SECRET=x  java -jar sgad-backend-1.0.0.jar --server.port=8081
+  (y pip install requests pymongo; MongoDB local en :27017).
+  Tests unitarios de Java (sin MongoDB): cd sgad-backend && mvn test
+
+── Agregado en la v2.1 (Angular usa el JWT) ──
+  pruebas_angular_jwt.py      -> 9/9 OK (navegador real: /me y /token con cookie, datos con Bearer, renovación del token a los ~30 s, Bearer falso gana a la cookie)
+  Necesita: backend en :8080 con SGAD_SESSION_TIMEOUT=1m y el Angular compilado en :4200 (servidor_estatico.py). Tarda ~45 s.

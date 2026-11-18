@@ -1,0 +1,9 @@
+v2.2 - Corrección: "al presionar F5 me saca al login (sesión expirada)"
+
+Causa: en la cadena JWT (SecurityConfig.jwtFilterChain) Spring aplicaba la protección contra fijación de
+sesión a CADA petición con JWT que además traía la cookie JSESSIONID: le cambiaba el id a la sesión.
+Con varias peticiones en paralelo (el panel hace 5 a la vez) el navegador se quedaba con un id viejo y
+el siguiente /api/auth/me respondía 401 SESION_EXPIRADA.
+
+Arreglo: .sessionFixation(fixation -> fixation.none()) en la cadena JWT (un JWT no inicia sesión, no debe tocarla).
+Prueba nueva: pruebas_automaticas/prueba_rotacion_sesion.py

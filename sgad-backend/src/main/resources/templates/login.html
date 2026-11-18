@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SGAD · Iniciar sesión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #a3e635;
+            --accent-dark: #84cc16;
+            --bg-card: #121212;
+            --bg-input: #1c1c1c;
+            --border-col: #2c2c2c;
+        }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background:
+                linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)),
+                url('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1600&auto=format&fit=crop')
+                center/cover no-repeat fixed;
+        }
+        .brand-title {
+            text-align: center;
+            color: #888;
+            letter-spacing: 3px;
+            font-size: 12px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+        .auth-card {
+            width: 440px;
+            max-width: 92vw;
+            background: var(--bg-card);
+            border: 1px solid var(--border-col);
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+        .auth-card h2 {
+            color: #fff;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+        .auth-card .subtitle {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 22px;
+        }
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .role-card {
+            background: #191919;
+            border: 1px solid var(--border-col);
+            border-radius: 10px;
+            padding: 16px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: #ccc;
+        }
+        .role-card:hover { border-color: #444; }
+        .role-card.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent), 0 0 18px rgba(163,230,53,0.25);
+            color: #fff;
+        }
+        .role-card .icon { font-size: 26px; display: block; margin-bottom: 6px; }
+        .role-card .label { font-size: 13px; font-weight: 600; }
+        label.form-label { color: #aaa; font-size: 13px; }
+        .form-control {
+            background: var(--bg-input);
+            border: 1px solid var(--border-col);
+            color: #fff;
+        }
+        .form-control:focus {
+            background: var(--bg-input);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.2rem rgba(163,230,53,0.15);
+        }
+        .form-control::placeholder { color: #666; }
+        .demo-hint {
+            background: #16210c;
+            border: 1px solid #33430f;
+            color: var(--accent);
+            font-size: 12.5px;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+        }
+        .btn-accent {
+            background: var(--accent);
+            border: none;
+            color: #111;
+            font-weight: 700;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .btn-accent:hover { background: var(--accent-dark); color: #111; }
+        .link-muted {
+            color: #999;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .link-muted:hover { color: var(--accent); }
+        .link-muted .accent { color: var(--accent); font-weight: 600; }
+    </style>
+</head>
+<body>
+<div>
+    <p class="brand-title">Sistema de Gestión y Administración Deportiva</p>
+    <div class="auth-card">
+        <h2>Iniciar Sesión</h2>
+        <p class="subtitle" th:text="${mostrarDemo} ? 'Selecciona tu rol para continuar' : 'Ingresa con tu cuenta para continuar'">Selecciona tu rol para continuar</p>
+
+        <div th:if="${param.error}" class="alert alert-danger py-2">Usuario o contraseña incorrectos.</div>
+        <div th:if="${param.oauthError}" class="alert alert-danger py-2">No se pudo iniciar sesión con Google. Intenta de nuevo o usa tu usuario y contraseña.</div>
+        <div th:if="${param.logout}" class="alert alert-success py-2">Sesión cerrada correctamente.</div>
+        <div th:if="${param.expired}" class="alert alert-warning py-2">Tu sesión expiró por inactividad. Inicia sesión de nuevo.</div>
+        <div th:if="${param.concurrent}" class="alert alert-warning py-2">Tu sesión se cerró porque iniciaste sesión desde otro lugar.</div>
+        <div th:if="${param.registrado}" class="alert alert-success py-2">Cuenta creada correctamente. Ya puedes iniciar sesión.</div>
+
+        <div class="role-grid" th:if="${mostrarDemo}">
+            <div class="role-card" data-demo-user="entrenador" data-demo-pass="entrenador123">
+                <span class="icon">🏆</span>
+                <span class="label">Entrenador</span>
+            </div>
+            <div class="role-card selected" data-demo-user="deportista" data-demo-pass="deportista123">
+                <span class="icon">🏃</span>
+                <span class="label">Deportista</span>
+            </div>
+            <div class="role-card" style="opacity:0.4; cursor:not-allowed;">
+                <span class="icon">🏫</span>
+                <span class="label">Escuela</span>
+            </div>
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="mb-3">
+                <label class="form-label">Usuario</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Ingresa tu usuario" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Ingresa tu contraseña" required>
+            </div>
+
+            <div class="demo-hint" id="demoHint" th:if="${mostrarDemo}">📍 Demo: <strong>deportista</strong> / <strong>deportista123</strong></div>
+
+            <button type="submit" class="btn btn-accent w-100">Ingresar</button>
+        </form>
+
+        <div th:if="${googleHabilitado}" class="mt-3">
+            <div class="text-center" style="color:#666;font-size:12px;margin-bottom:10px;">— o —</div>
+            <a th:href="@{/oauth2/authorization/google}" class="btn w-100"
+               style="background:#fff;color:#222;font-weight:600;border-radius:8px;">
+                <svg width="18" height="18" viewBox="0 0 48 48" style="vertical-align:-3px;margin-right:8px">
+                    <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/>
+                    <path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/>
+                    <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/>
+                </svg>Continuar con Google
+            </a>
+        </div>
+
+        <div class="text-center mt-3">
+            <a href="/registro" class="link-muted">¿No tienes cuenta? <span class="accent">Regístrate</span></a>
+        </div>
+        <div class="text-center mt-2">
+            <a href="/publico" class="link-muted">Ver página pública</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.role-card[data-demo-user]').forEach(function (card) {
+        card.addEventListener('click', function () {
+            document.querySelectorAll('.role-card').forEach(function (c) { c.classList.remove('selected'); });
+            card.classList.add('selected');
+
+            var user = card.getAttribute('data-demo-user');
+            var pass = card.getAttribute('data-demo-pass');
+
+            document.getElementById('username').value = user;
+            document.getElementById('password').value = pass;
+            document.getElementById('demoHint').innerHTML =
+                '📍 Demo: <strong>' + user + '</strong> / <strong>' + pass + '</strong>';
+        });
+    });
+</script>
+</body>
+</html>
